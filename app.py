@@ -7,11 +7,13 @@ from langchain_core.messages import SystemMessage, HumanMessage
 # 環境変数ロード
 load_dotenv()
 
-# APIキー確認
-api_key = os.getenv("OPENAI_API_KEY")
+# ローカル（.env） or Streamlit Cloud（Secrets）両対応
+api_key = os.getenv("OPENAI_API_KEY", st.secrets.get("OPENAI_API_KEY"))
+
 if not api_key:
-    st.error("OpenAI APIキーが設定されていません。環境変数を確認してください。")
+    st.error("OpenAI APIキーが見つかりません。環境変数または Streamlit Secrets を確認してください。")
     st.stop()
+
 
 # LLM初期化（最新版は "model"）
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
